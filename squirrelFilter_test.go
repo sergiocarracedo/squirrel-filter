@@ -1,4 +1,4 @@
-package test_go_tags
+package squirrelfilter
 
 import (
 	sq "github.com/Masterminds/squirrel"
