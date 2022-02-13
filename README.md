@@ -1,4 +1,3 @@
-```
 # squirrel-filter: sql conditions from a struct
 This package provides a layer over [squirrel](https://github.com/Masterminds/squirrel) (a sql query builder) to 
 simplify filtering.
@@ -17,12 +16,12 @@ you could populate the struct values using the package `json` or pupulate and va
 
 # Instalation
 Use go get
-```golang
-go get github.com/sergiocarracedo/squirrel-filter
+```bach
+go get github.com/sergiocarracedo/squirrel-filter@v0.1.0
 ```
 Then import the package in your code
 ```golang
-import "github.com/sergiocarracedo/squirrel-filter"
+import "github.com/sergiocarracedo/squirrel-filter@v0.1.0"
 ```
 
 
