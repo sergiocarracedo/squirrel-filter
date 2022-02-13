@@ -1,4 +1,4 @@
-package squirrelFilter
+package test_go_tags
 
 import (
 	"fmt"

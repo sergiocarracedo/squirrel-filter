@@ -1,4 +1,4 @@
-module test
+module squirrelFilter
 
 go 1.17
 
