@@ -1,4 +1,4 @@
-module github.com/sergiocarracedo/squirrelfilter/v1
+module github.com/sergiocarracedo/squirrelfilter
 
 go 1.17
 
