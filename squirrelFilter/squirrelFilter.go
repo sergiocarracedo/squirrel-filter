@@ -1,7 +1,6 @@
-package squirrel_filter
+package squirrelFilter
 
 import (
-	"errors"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/fatih/structtag"
@@ -26,12 +25,7 @@ var (
 	defaultOperator = OPERATOR_EQUAL
 )
 
-const TAG = "sqfilter"
-
-var (
-	errNoDbTarget    = func(f string) error { return errors.New(fmt.Sprintf("%s: No db target field was set", f)) }
-	errEmptyDbTarget = func(f string) error { return errors.New(fmt.Sprintf("%s: Empty db target", f)) }
-)
+const TAG = "sqFilter"
 
 type fieldOptions struct {
 	Operator    string
@@ -72,7 +66,7 @@ func getOptions(field reflect.StructField) (options fieldOptions, err error) {
 		// DbFieldName
 		if optionName == "db" {
 			if optionValue == "" {
-				err = errEmptyDbTarget(field.Name)
+				err = ErrEmptyDbTarget{field.Name}
 				return
 			}
 			options.DbFieldName = optionValue
@@ -96,50 +90,56 @@ func getOptions(field reflect.StructField) (options fieldOptions, err error) {
 		if dbTag != nil {
 			options.DbFieldName = dbTag.Name
 		} else {
-			err = errNoDbTarget(field.Name)
+			options.DbFieldName = strings.ToLower(field.Name)
 		}
 	}
+
 	return
 }
 
 func GetConditions(filter interface{}) (sqConditions sq.And, err error) {
 	t := reflect.TypeOf(filter)
 	v := reflect.ValueOf(filter)
+	z := reflect.Zero(t)
 
 	for i := 0; i < t.NumField(); i++ {
-		f := t.Field(i)
-		value := v.Field(i)
+		field := t.Field(i)
+		fieldValue := v.Field(i).Interface()
+		zeroValue := z.Field(i).Interface()
 
-		options, err := getOptions(f) //sqFilterTag, dbTag)
+		options, err := getOptions(field) //sqFilterTag, dbTag)
 		if err != nil {
-			panic(err)
+			return sqConditions, err
+		}
+
+		if options.Required && fieldValue == zeroValue {
+			return sqConditions, ErrRequiredFilter{field.Name}
 		}
 
 		var cond sq.Sqlizer
 
 		switch options.Operator {
 		case OPERATOR_EQUAL:
-			cond = sq.Eq{options.DbFieldName: value}
+			cond = sq.Eq{options.DbFieldName: fieldValue}
 		case OPERATOR_NOT_EQUAL:
-			cond = sq.NotEq{options.DbFieldName: value}
+			cond = sq.NotEq{options.DbFieldName: fieldValue}
 		case OPERATOR_LESS:
-			cond = sq.Lt{options.DbFieldName: value}
+			cond = sq.Lt{options.DbFieldName: fieldValue}
 		case OPERATOR_LESS_OR_EQUAL:
-			cond = sq.LtOrEq{options.DbFieldName: value}
+			cond = sq.LtOrEq{options.DbFieldName: fieldValue}
 		case OPERATOR_GREAT:
-			cond = sq.Gt{options.DbFieldName: value}
+			cond = sq.Gt{options.DbFieldName: fieldValue}
 		case OPERATOR_GREAT_OR_EQUAL:
-			cond = sq.LtOrEq{options.DbFieldName: value}
+			cond = sq.GtOrEq{options.DbFieldName: fieldValue}
 		case OPERATOR_STARTS:
-			cond = sq.Like{options.DbFieldName: fmt.Sprintf("%s%", value)}
+			cond = sq.ILike{options.DbFieldName: fmt.Sprintf("%s%%", fieldValue)}
 		case OPERATOR_CONTAINS:
-			cond = sq.Like{options.DbFieldName: fmt.Sprintf("%%s%", value)}
+			cond = sq.ILike{options.DbFieldName: fmt.Sprintf("%%%s%%", fieldValue)}
 		}
 
 		if cond != nil {
 			sqConditions = append(sqConditions, cond.(sq.Sqlizer))
 		}
 	}
-
 	return
 }

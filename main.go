@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Masterminds/squirrel"
-	"test/squirrel_filter"
+	"test/squirrelFilter"
 	"time"
 )
 
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	builder := squirrel.Select("*").From("table")
-	filterConditions, _ := squirrel_filter.GetConditions(filter)
+	filterConditions, _ := squirrelFilter.GetConditions(filter)
 	builder = builder.Where(filterConditions)
 
 	query, args, err := builder.ToSql()
