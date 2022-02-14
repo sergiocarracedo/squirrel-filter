@@ -39,7 +39,7 @@ type Filter struct {
 }
 ```
 
-Get the conditions for squirrel using
+Getting the conditions for squirrel using
 ```golang
 import sqFilter "github.com/sergiocarracedo/squirrelfilter"
 import sq "github.com/Masterminds/squirrel"
@@ -54,8 +54,8 @@ sq.And{sq.Eq{"name": value}, sq.ILike{"surname": value} ...}
 ### Options
 
 * Operator: `=,` `!=`, `<`, `<=`, `>`, `>=`, `like`, `contains`
-  `like` and  `contains` are case insensitive
-  If no operator is set, `=` will be used
+  * `like` and  `contains` are case insensitive 
+  * If no operator is set, `=` will be used
 * Required: `required` makes mandatory provide a non-zero value for the field
 * Target Field: `db=[field]` set the field name in database to filter. but default is the struct's field name in lowercase
     * The package can also use the tags `db:"field_name"`
