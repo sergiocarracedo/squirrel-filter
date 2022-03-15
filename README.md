@@ -21,7 +21,7 @@ go get github.com/sergiocarracedo/squirrel-filter
 ```
 Then import the package in your code
 ```golang
-import "github.com/sergiocarracedo/squirrel-filter
+import "github.com/sergiocarracedo/squirrel-filter"
 ```
 
 
