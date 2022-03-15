@@ -17,11 +17,11 @@ you could populate the struct values using the package `json` or populate and va
 # Instalation
 Use go get
 ```bach
-go get github.com/sergiocarracedo/squirrel-filter
+go get github.com/sergiocarracedo/squirrelfilter
 ```
 Then import the package in your code
 ```golang
-import "github.com/sergiocarracedo/squirrel-filter"
+import "github.com/sergiocarracedo/squirrelfilter"
 ```
 
 
