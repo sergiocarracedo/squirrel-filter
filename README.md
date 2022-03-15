@@ -1,4 +1,4 @@
-# squirrel-filter: sql conditions from a struct
+# squirrelfilter: sql conditions from a struct
 This package provides a layer over [squirrel](https://github.com/Masterminds/squirrel) (a sql query builder) to 
 simplify filtering.
 
